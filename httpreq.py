@@ -80,6 +80,21 @@ class HTTPRequest:
         if body_start:
             self.body = "\n".join(lines[body_start:])
 
+def print_help():
+    print("\n🌐 Interactive HTTP Request Tool")
+    print("━" * 60)
+    print("Commands:")
+    print("  display       - Show current request")
+    print("  execute       - Send the request")
+    print("  method <M>    - Set HTTP method (GET, POST, etc.)")
+    print("  url <U>       - Set URL")
+    print("  header <K: V> - Add/modify header")
+    print("  body          - Edit body (enter '.' on new line to finish)")
+    print("  show          - Show request as text to edit")
+    print("  edit          - Edit raw request text")
+    print("  clear         - Clear request")
+    print("  quit          - Exit")
+    print("━" * 60)
 
 def execute_request(req):
     """Execute the HTTP request"""
@@ -122,20 +137,7 @@ def main():
     session = PromptSession(history=FileHistory(HISTORY_FILE))
     req = HTTPRequest()
 
-    print("\n🌐 Interactive HTTP Request Tool")
-    print("━" * 60)
-    print("Commands:")
-    print("  display       - Show current request")
-    print("  execute       - Send the request")
-    print("  method <M>    - Set HTTP method (GET, POST, etc.)")
-    print("  url <U>       - Set URL")
-    print("  header <K: V> - Add/modify header")
-    print("  body          - Edit body (enter '.' on new line to finish)")
-    print("  show          - Show request as text to edit")
-    print("  edit          - Edit raw request text")
-    print("  clear         - Clear request")
-    print("  quit          - Exit")
-    print("━" * 60)
+    print_help()
 
     while True:
         try:
@@ -158,6 +160,9 @@ def main():
 
             elif command == "execute":
                 execute_request(req)
+            
+            elif command == "help":
+                print_help()
 
             elif command == "method":
                 req.method = args.upper()
