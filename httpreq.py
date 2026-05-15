@@ -9,6 +9,7 @@ import json
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
+from prompt_toolkit.formatted_text import FormattedText
 import os
 
 # Default history file
@@ -16,9 +17,41 @@ HISTORY_FILE = os.path.expanduser("~/.httpreq_history")
 
 # Custom style for the prompt
 style = Style.from_dict({
-    'prompt': 'bg:#0066ff #ffffff bold',
-    'method': 'bg:#00aa00 #ffffff bold',
+    "prompt": "#5fd7ff bold",
+    "bracket": "#a8a8a8",
+    "method.get": "#00af5f bold",
+    "method.post": "#d78700 bold",
+    "method.put": "#5f87ff bold",
+    "method.patch": "#af5fff bold",
+    "method.delete": "#d70000 bold",
+    "method.other": "#ffffff bold",
+    "url": "#d0d0d0",
+    "sep": "#808080",
 })
+
+
+def build_prompt(req):
+    """Create a colored prompt that shows current method and target URL."""
+    method_lower = req.method.lower()
+    method_classes = {
+        "get": "class:method.get",
+        "post": "class:method.post",
+        "put": "class:method.put",
+        "patch": "class:method.patch",
+        "delete": "class:method.delete",
+    }
+    method_class = method_classes.get(method_lower, "class:method.other")
+
+    return FormattedText([
+        ("class:prompt", "httpreq"),
+        ("class:sep", " "),
+        ("class:bracket", "["),
+        (method_class, req.method.upper()),
+        ("class:bracket", "]"),
+        ("class:sep", " "),
+        ("class:url", req.url),
+        ("class:sep", " > "),
+    ])
 
 class HTTPRequest:
     def __init__(self):
@@ -142,7 +175,7 @@ def main():
     while True:
         try:
             req.display()
-            user_input = session.prompt("httpreq> ").strip()
+            user_input = session.prompt(build_prompt(req), style=style).strip()
 
             if not user_input:
                 continue
