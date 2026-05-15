@@ -56,7 +56,7 @@ def build_prompt(req):
 class HTTPRequest:
     def __init__(self):
         self.method = "GET"
-        self.url = "http://localhost:8080"
+        self.url = "https://www.vapidlabs.com/"
         self.headers = {}
         self.body = ""
 
