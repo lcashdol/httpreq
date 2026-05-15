@@ -159,7 +159,8 @@ def execute_request(req):
         try:
             print(json.dumps(response.json(), indent=2))
         except:
-            print(response.text[:500])
+            #print(response.text[:500])
+            print(response.text)
         
     except Exception as e:
         print(f"✗ Error: {e}")
